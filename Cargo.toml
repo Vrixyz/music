@@ -8,15 +8,10 @@ edition = "2018"
 
 [features]
 bluetooth = ["clap", "serialport"]
+music = ["rodio", "rand"]
 
 [dependencies]
-rodio = "*"
-rand = "*"
-
-[dependencies.clap]
-version = "*"
-optional = true
-
-[dependencies.serialport]
-version = "*"
-optional = true
+rodio = { version = "*", optional = true }
+rand = { version = "*", optional = true }
+clap = { version = "*", optional = true }
+serialport = { version = "*", optional = true }
