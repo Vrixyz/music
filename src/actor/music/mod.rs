@@ -16,11 +16,15 @@ impl ActorMusic {
     pub fn new() -> Self {
         let random = rand::thread_rng();
         let sound_paths = fs::read_dir("assets/ogg/")
-            .unwrap("Failed to read sounds folder")
+            .unwrap()
             .map(|res| res.map(|e| e.path().display().to_string()))
             .collect::<Result<Vec<_>, io::Error>>()
-            .unwrap("Failed to enumerate sound files.");
-            Self::new(random, sound_paths)
+            .unwrap();
+            Self {
+                random,
+                sound_paths,
+                prev_sink: None,
+            }
     }
     fn play_random(&mut self) {
         let path = self.sound_paths.choose(&mut self.random).unwrap();
