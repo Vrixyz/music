@@ -8,11 +8,11 @@ pub trait Input {
 }
 
 #[cfg(not(feature = "bluetooth"))]
-pub fn get_input() -> console::InputConsole {
-    console::InputConsole::new()
+pub fn get_input() -> Result<console::InputConsole, String> {
+    Ok(console::InputConsole::new())
 }
 #[cfg(feature = "bluetooth")]
-pub fn get_input() -> serial::InputSerial {
+pub fn get_input() -> Result<serial::InputSerial, String> {
     use clap::{App, AppSettings, Arg};
     let matches = App::new("Serialport Example - Receive Data")
         .about("Reads data from a serial port and echoes it to stdout")
@@ -32,9 +32,9 @@ pub fn get_input() -> serial::InputSerial {
         .get_matches();
     let port_name = matches.value_of("port").unwrap();
     let baud_rate = matches.value_of("baud").unwrap();
-    let input: serial::InputSerial;
+    let input;
     if let Ok(baud_rate) = baud_rate.parse::<u32>() {
-        input = serial::InputSerial::new(port_name, baud_rate).unwrap();
+        input = serial::InputSerial::new(port_name, baud_rate);
     } else {
         eprintln!("Error: Invalid baud rate '{}' specified", baud_rate);
         ::std::process::exit(1);
