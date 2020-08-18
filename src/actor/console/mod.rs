@@ -10,7 +10,8 @@ impl ActorConsole {
 }
 
 impl Actor for ActorConsole {
-    fn act(&mut self) {
+    fn act(&mut self) -> Result<(), ()> {
         println!("Act!");
+        Ok(())
     }
 }

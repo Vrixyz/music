@@ -16,7 +16,10 @@ fn main() {
                 loop {
                     if let Some(read) = input.read() {
                         if read {
-                            actor.act();
+                            if (actor.act().is_err()) {
+                                println!("action did have an error.");
+                                break;
+                            }
                         }
                         else {
                             println!("We read nothing, This is unusual.");

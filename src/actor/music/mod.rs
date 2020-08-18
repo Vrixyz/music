@@ -26,13 +26,13 @@ impl ActorMusic {
                 prev_sink: None,
             }
     }
-    fn play_random(&mut self) {
-        let path = self.sound_paths.choose(&mut self.random).unwrap();
+    fn play_random(&mut self) -> Result<(), ()> {
+        let path = self.sound_paths.choose(&mut self.random).ok_or(())?;
         println!("Play {}!", path);
         // TODO: Next step 2: connect to bluetooth manually and send music file. (so we can then play to different positions)
-        let device = rodio::default_output_device().unwrap();
-        let file = File::open(path).unwrap();
-        let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
+        let device = rodio::default_output_device().ok_or(())?;
+        let file = File::open(path).map_err(|_| ())?;
+        let source = rodio::Decoder::new(BufReader::new(file)).map_err(|_| ())?;
         let sink = Sink::new(&device);
         sink.append(source);
         if let Some(prev_sink) = self.prev_sink.take() {
@@ -40,11 +40,13 @@ impl ActorMusic {
         }
         sink.play();
         self.prev_sink = Some(sink);
+        Ok(())
     }
 }
 
 impl Actor for ActorMusic {
-    fn act(&mut self) {
-        self.play_random();
+    fn act(&mut self)  -> Result<(), ()> {
+        self.play_random()?;
+        Ok(())
     }
 }

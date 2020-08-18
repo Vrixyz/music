@@ -4,7 +4,7 @@ mod console;
 mod music;
 
 pub trait Actor {
-    fn act(&mut self);
+    fn act(&mut self) -> Result<(), ()>;
 }
 
 #[cfg(not(feature = "music"))]
